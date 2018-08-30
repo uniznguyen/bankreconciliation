@@ -28,12 +28,31 @@ df2 = pd.read_sql(sql,cn)
 df2['Debit'] = df2['Debit'].replace(np.nan,0)
 df2['Credit'] = df2['Credit'].replace(np.nan,0)
 
-df2['Transaction_Amount'] = df2['Credit'] - df2['Debit']
+df2['Transaction_Amount'] =  df2['Debit'] - df2['Credit']
 
 df2.drop(['ClearedStatus','Debit','Credit',], axis=1,inplace=True)
 
-df2 = df2.sort_values(['Date','Transaction_Amount'],ascending=[True,True])
+df2 = df2.sort_values(['Transaction_Amount'],ascending=[True])
 
 df2 = df2[df2['Transaction_Amount'] != 0]
 
+list3 = []
+counter2 = []
+
+for index, row in df2.iterrows():
+    list3.append(row['Transaction_Amount'])
+    counter2.append(list3.count(row['Transaction_Amount']))
+
+df2['Counter'] = counter2    
+df2['Combine'] = df2['Transaction_Amount'].astype(str) + '|' + df2['Counter'].astype(str)
+
 print (df2)
+
+
+
+writer = pd.ExcelWriter(OutputExcelPath,engine='xlsxwriter')
+df2.to_excel(writer,sheet_name='Sheet1',startcol=15,startrow=0,index=False,header=True,engine='xlsxwriter')
+
+
+writer.save()
+cn.close()
