@@ -36,15 +36,6 @@ df['Combine'] = df['Transaction_Amount'].astype(str) + '|' + df['Counter'].astyp
 #print (df)
 print (df.dtypes)
 
-
-
-
-
-
-
-
-
-
 #DateFrom and DateTo paramters for the query
 DateFrom = "{d'2018-01-01'}"
 DateTo = "{d'2018-08-31'}"
