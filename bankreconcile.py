@@ -5,14 +5,15 @@ import pyodbc
 import os
 import sys
 
+#test
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BankStatementPath = os.path.join(BASE_DIR,'BankStatement.xlsx')
 OutputExcelPath = os.path.join(BASE_DIR,'Reconciliation.xlsx')
 
-#DateFrom and DateTo paramters for the query
+#DateFrom and DateTo paramters for the query 
 DateFrom = "{d'2018-01-01'}"
-DateTo = "{d'2018-12-14'}"
+DateTo = "{d'2019-02-12'}"
 
 # open Excel file from bank statement, create dataframe from worksheet
 df = pd.read_excel(BankStatementPath, header=0, dtype={'Customer Ref':str})
