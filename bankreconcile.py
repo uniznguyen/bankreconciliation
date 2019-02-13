@@ -26,9 +26,10 @@ print (df)
 def getpendingcheckno(row):
     if "Pending Check" in row['Memo']:
         checkno = row['Memo'][-5:]
-    else:
-        checkno = row['Reference']
-    return checkno
+        return checkno
+    # else:
+    #     checkno = row['Reference']
+    
 
 df['Reference'] = df.apply(getpendingcheckno, axis = 1)
 
