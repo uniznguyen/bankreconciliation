@@ -56,10 +56,10 @@ for index, row in OtherDebit.iterrows():
     list1.append(row['Debit'])
     counter1.append(list1.count(row['Debit']))
 
-#OtherDebit['Counter'] = counter1
+
 OtherDebit.loc[:,'Counter'] = counter1
 
-#OtherDebit['Combine'] = OtherDebit['Debit'].astype(str) + '|' + OtherDebit['Counter'].astype(str)
+
 OtherDebit.loc[:,'Combine'] = OtherDebit['Debit'].astype(str) + '|' + OtherDebit['Counter'].astype(str)
 
 
@@ -101,7 +101,7 @@ df2.rename(columns = {'Debit':'Credit','Credit':'Debit'}, inplace = True)
 
 df2.drop(['ClearedStatus',], axis=1,inplace=True)
 
-# # remove rows that have transaction amount = 0
+# remove rows that have transaction amount = 0
 
 
 Debit2 = df2[df2['Debit'] != 0]
@@ -133,10 +133,10 @@ for index, row in OtherDebit2.iterrows():
     list2.append(row['Debit'])
     counter2.append(list2.count(row['Debit']))
 
-#OtherDebit2['Counter'] = counter2
+
 OtherDebit2.loc[:,'Counter'] = counter2
 
-#OtherDebit2['Combine'] = OtherDebit2['Debit'].astype(str) + '|' + OtherDebit2['Counter'].astype(str)
+
 OtherDebit2.loc[:,'Combine'] = OtherDebit2['Debit'].astype(str) + '|' + OtherDebit2['Counter'].astype(str)
 
 
@@ -155,8 +155,6 @@ Credit2.loc[:,'Combine'] = Credit2['Credit'].astype(str) + '|' + Credit2['Counte
 Check.loc[:,'Matched'] = Check['Combine'].isin(Check2['Combine'])
 Check2.loc[:,'Matched'] = Check2['Combine'].isin(Check['Combine'])
 
-# OtherDebit['Matched'] = OtherDebit['Combine'].isin(OtherDebit2['Combine'])
-# OtherDebit2['Matched'] = OtherDebit2['Combine'].isin(OtherDebit['Combine'])
 
 OtherDebit.loc[:,'Matched'] = OtherDebit['Combine'].isin(OtherDebit2['Combine'])
 OtherDebit2.loc[:,'Matched'] = OtherDebit2['Combine'].isin(OtherDebit['Combine'])
@@ -176,21 +174,16 @@ writer.sheets['Checks'].set_column('D:D', None, numberformat)
 writer.sheets['Checks'].set_column('O:O', None, numberformat)
 
 
-
 OtherDebit.to_excel(writer,sheet_name='OtherDebits', startcol=0, startrow = 0, index = False, header = True, engine = 'xlsxwriter')
 OtherDebit2.to_excel(writer,sheet_name='OtherDebits', startcol=10, startrow = 0, index = False, header = True, engine = 'xlsxwriter')
 writer.sheets['OtherDebits'].set_column('D:D', None, numberformat)
 writer.sheets['OtherDebits'].set_column('O:O', None, numberformat)
 
 
-
-
-
 Credit.to_excel(writer,sheet_name='Credits',startcol=0,startrow=0,index=False,header=True,engine='xlsxwriter')
 Credit2.to_excel(writer,sheet_name='Credits',startcol=10,startrow=0,index=False,header=True,engine='xlsxwriter')
 writer.sheets['Credits'].set_column('D:D', None, numberformat)
 writer.sheets['Credits'].set_column('O:O', None, numberformat)
-
 
 
 writer.save()
