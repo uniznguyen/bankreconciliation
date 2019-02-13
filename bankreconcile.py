@@ -6,8 +6,6 @@ import os
 import sys
 
 
-#this is new branch for new transaction file
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BankStatementPath = os.path.join(BASE_DIR,'BankStatement.xlsx')
 OutputExcelPath = os.path.join(BASE_DIR,'Reconciliation.xlsx')
