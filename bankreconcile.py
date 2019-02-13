@@ -21,15 +21,12 @@ df = pd.read_excel(BankStatementPath, header=0, dtype={'Reference':str})
 df['Debit Amount'] = df['Debit Amount'].replace(np.nan,0)
 df['Credit Amount'] = df['Credit Amount'].replace(np.nan,0)
 
-print (df)
-
 def getpendingcheckno(row):
     if "Pending Check" in row['Memo']:
         checkno = row['Memo'][-5:]
-        return checkno
-    # else:
-    #     checkno = row['Reference']
-    
+    else:
+        checkno = row['Reference']
+    return checkno
 
 df['Reference'] = df.apply(getpendingcheckno, axis = 1)
 
@@ -48,8 +45,6 @@ Debit = Debit.sort_values(['Debit'], ascending = True)
 Credit = df[df['Credit'] !=0]
 Credit = Credit.drop(columns = ['Debit'])
 Credit = Credit.sort_values(['Credit'],ascending = True)
-
-print (Debit)
 
 Check = Debit[Debit['Reference'].str.contains('^\d{5}$',regex = True)]
 Debit = Debit.merge(Check,how = 'left', indicator = True)
