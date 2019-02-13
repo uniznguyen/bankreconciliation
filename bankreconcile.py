@@ -5,6 +5,7 @@ import pyodbc
 import os
 import sys
 
+
 #this is new branch for new transaction file
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -16,17 +17,26 @@ DateFrom = "{d'2018-01-01'}"
 DateTo = "{d'2019-02-12'}"
 
 # open Excel file from bank statement, create dataframe from worksheet
-df = pd.read_excel(BankStatementPath, header=0, dtype={'Customer Ref':str})
-df['Debit'] = df['Debit'].replace(np.nan,0)
-df['Credit'] = df['Credit'].replace(np.nan,0)
+df = pd.read_excel(BankStatementPath, header=0, dtype={'Reference':str})
+df['Debit Amount'] = df['Debit Amount'].replace(np.nan,0)
+df['Credit Amount'] = df['Credit Amount'].replace(np.nan,0)
 
+print (df)
 
+def getpendingcheckno(row):
+    if "Pending Check" in row['Memo']:
+        checkno = row['Memo'][-5:]
+    else:
+        checkno = row['Reference']
+    return checkno
+
+df['Reference'] = df.apply(getpendingcheckno, axis = 1)
 
 #drop unneccessary columns
-df = df.drop(columns = ['Type Code','Bank Ref','Value Date'],axis = 1)
+df = df.drop(columns = ['Record Type','Account Number', 'Account Name','Date','Code'],axis = 1)
+df.rename(columns={'Credit Amount':'Credit','Debit Amount':'Debit'},inplace = True)
 
 #sort the dataframe by Transaction Amount
-#df = df.sort_values(['Debit','Credit'],ascending=[True,True])
 
 Debit = df[df['Debit'] != 0]
 Debit = Debit.drop(columns = ['Credit'])
@@ -38,9 +48,9 @@ Credit = df[df['Credit'] !=0]
 Credit = Credit.drop(columns = ['Debit'])
 Credit = Credit.sort_values(['Credit'],ascending = True)
 
+print (Debit)
 
-
-Check = Debit[Debit['Customer Ref'].str.contains('^\d{5}$',regex = True)]
+Check = Debit[Debit['Reference'].str.contains('^\d{5}$',regex = True)]
 Debit = Debit.merge(Check,how = 'left', indicator = True)
 OtherDebit = Debit[Debit['_merge'] == 'left_only']
 OtherDebit.drop(['_merge'],axis = 1, inplace = True)
@@ -73,7 +83,7 @@ Credit.loc[:,'Combine'] = Credit['Credit'].astype(str) + '|' + Credit['Counter']
 
 
 # create a new comlum to combine transaction amount and check number
-Check.loc[:,'Combine'] = Check['Debit'].astype(str) + '|' + Check['Customer Ref'].astype(str)
+Check.loc[:,'Combine'] = Check['Debit'].astype(str) + '|' + Check['Reference'].astype(str)
 
 
 
@@ -95,10 +105,7 @@ df2['RefNumber'] = df2['RefNumber'].replace(np.nan,0)
 df2.rename(columns = {'Debit':'Credit','Credit':'Debit'}, inplace = True)
 
 
-
 df2.drop(['ClearedStatus',], axis=1,inplace=True)
-
-#df2 = df2.sort_values(['Transaction_Amount'],ascending=[True])
 
 # # remove rows that have transaction amount = 0
 
