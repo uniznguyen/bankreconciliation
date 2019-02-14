@@ -12,7 +12,7 @@ OutputExcelPath = os.path.join(BASE_DIR,'Reconciliation.xlsx')
 
 #DateFrom and DateTo paramters for the query 
 DateFrom = "{d'2018-01-01'}"
-DateTo = "{d'2019-02-12'}"
+DateTo = "{d'2019-02-14'}"
 
 # open Excel file from bank statement, create dataframe from worksheet
 df = pd.read_excel(BankStatementPath, header=0, dtype={'Reference':str})
@@ -29,7 +29,7 @@ def getpendingcheckno(row):
 df['Reference'] = df.apply(getpendingcheckno, axis = 1)
 
 #drop unneccessary columns
-df = df.drop(columns = ['Record Type','Account Number', 'Account Name','Date','Code'],axis = 1)
+df = df.drop(columns = ['Record Type','Account Number', 'Account Name','Code'],axis = 1)
 df.rename(columns={'Credit Amount':'Credit','Debit Amount':'Debit'},inplace = True)
 
 #sort the dataframe by Transaction Amount
