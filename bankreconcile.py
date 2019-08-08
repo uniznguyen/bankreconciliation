@@ -11,8 +11,8 @@ BankStatementPath = os.path.join(BASE_DIR,'BankStatement.xlsx')
 OutputExcelPath = os.path.join(BASE_DIR,'Reconciliation.xlsx')
 
 #DateFrom and DateTo paramters for the query 
-DateFrom = "{d'2018-01-01'}"
-DateTo = "{d'2019-02-14'}"
+DateFrom = "{d'2019-01-01'}"
+DateTo = "{d'2019-08-08'}"
 
 # open Excel file from bank statement, create dataframe from worksheet
 df = pd.read_excel(BankStatementPath, header=0, dtype={'Reference':str})
@@ -36,13 +36,13 @@ df.rename(columns={'Credit Amount':'Credit','Debit Amount':'Debit'},inplace = Tr
 
 Debit = df[df['Debit'] != 0]
 Debit = Debit.drop(columns = ['Credit'])
-Debit = Debit.sort_values(['Debit'], ascending = True)
+Debit = Debit.sort_values(['Debit','Date'], ascending = [True, True])
 
 
 
 Credit = df[df['Credit'] !=0]
 Credit = Credit.drop(columns = ['Debit'])
-Credit = Credit.sort_values(['Credit'],ascending = True)
+Credit = Credit.sort_values(['Credit','Date'],ascending = [True,True])
 
 Check = Debit[Debit['Reference'].str.contains('^\d{5}$',regex = True)]
 Debit = Debit.merge(Check,how = 'left', indicator = True)
@@ -106,11 +106,11 @@ df2.drop(['ClearedStatus',], axis=1,inplace=True)
 
 Debit2 = df2[df2['Debit'] != 0]
 Debit2.drop(['Credit',], axis = 1, inplace = True)
-Debit2 = Debit2.sort_values(['Debit'], ascending = True)
+Debit2 = Debit2.sort_values(['Debit','Date'], ascending = [True, True])
 
 Credit2 = df2[df2['Credit'] != 0]
 Credit2.drop(['Debit',], axis = 1, inplace = True)
-Credit2 = Credit2.sort_values(['Credit'],ascending = True)
+Credit2 = Credit2.sort_values(['Credit','Date'],ascending = [True, True])
 
 
 # use regular expression to find check transactions
