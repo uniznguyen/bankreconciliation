@@ -172,6 +172,10 @@ Check.to_excel(writer,sheet_name='Checks',startcol=0,startrow=0,index=False,head
 Check2.to_excel(writer,sheet_name='Checks',startcol=10,startrow=0,index=False,header=True,engine='xlsxwriter')
 writer.sheets['Checks'].set_column('B:B', None, numberformat)
 writer.sheets['Checks'].set_column('O:O', None, numberformat)
+writer.sheets['Checks'].autofilter('B1:Q1')
+# worksheet = writer.sheets['Checks']
+# worksheet.set_column('B:B', None, numberformat)
+# worksheet.autofilter('B:D')
 
 
 
@@ -179,12 +183,15 @@ OtherDebit.to_excel(writer,sheet_name='OtherDebits', startcol=0, startrow = 0, i
 OtherDebit2.to_excel(writer,sheet_name='OtherDebits', startcol=10, startrow = 0, index = False, header = True, engine = 'xlsxwriter')
 writer.sheets['OtherDebits'].set_column('B:B', None, numberformat)
 writer.sheets['OtherDebits'].set_column('O:O', None, numberformat)
+writer.sheets['OtherDebits'].autofilter('B1:R1')
+
 
 
 Credit.to_excel(writer,sheet_name='Credits',startcol=0,startrow=0,index=False,header=True,engine='xlsxwriter')
 Credit2.to_excel(writer,sheet_name='Credits',startcol=10,startrow=0,index=False,header=True,engine='xlsxwriter')
 writer.sheets['Credits'].set_column('B:B', None, numberformat)
 writer.sheets['Credits'].set_column('O:O', None, numberformat)
+writer.sheets['Credits'].autofilter('B1:R1')
 
 
 writer.save()
