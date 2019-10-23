@@ -12,7 +12,7 @@ OutputExcelPath = os.path.join(BASE_DIR,'Reconciliation.xlsx')
 
 #DateFrom and DateTo paramters for the query 
 DateFrom = "{d'2019-01-01'}"
-DateTo = "{d'2019-08-09'}"
+DateTo = "{d'2019-10-23'}"
 
 # open Excel file from bank statement, create dataframe from worksheet
 df = pd.read_excel(BankStatementPath, header=0, dtype={'Reference':str})
@@ -44,7 +44,7 @@ Credit = df[df['Credit'] !=0]
 Credit = Credit.drop(columns = ['Debit'])
 Credit = Credit.sort_values(['Credit','Date'],ascending = [True,True])
 
-Check = Debit[Debit['Reference'].str.contains('^\d{5}$',regex = True)]
+Check = Debit[Debit['Reference'].str.contains('^\d{5}$',regex = True, na = False)]
 Debit = Debit.merge(Check,how = 'left', indicator = True)
 OtherDebit = Debit[Debit['_merge'] == 'left_only']
 OtherDebit.drop(['_merge'],axis = 1, inplace = True)
@@ -172,7 +172,7 @@ Check.to_excel(writer,sheet_name='Checks',startcol=0,startrow=0,index=False,head
 Check2.to_excel(writer,sheet_name='Checks',startcol=10,startrow=0,index=False,header=True,engine='xlsxwriter')
 writer.sheets['Checks'].set_column('B:B', None, numberformat)
 writer.sheets['Checks'].set_column('O:O', None, numberformat)
-writer.sheets['Checks'].autofilter('B1:Q1')
+writer.sheets['Checks'].autofilter('B1:Q1000')
 
 
 
@@ -180,14 +180,14 @@ OtherDebit.to_excel(writer,sheet_name='OtherDebits', startcol=0, startrow = 0, i
 OtherDebit2.to_excel(writer,sheet_name='OtherDebits', startcol=10, startrow = 0, index = False, header = True, engine = 'xlsxwriter')
 writer.sheets['OtherDebits'].set_column('B:B', None, numberformat)
 writer.sheets['OtherDebits'].set_column('O:O', None, numberformat)
-writer.sheets['OtherDebits'].autofilter('B1:R1')
+writer.sheets['OtherDebits'].autofilter('B1:R1000')
 
 
 Credit.to_excel(writer,sheet_name='Credits',startcol=0,startrow=0,index=False,header=True,engine='xlsxwriter')
 Credit2.to_excel(writer,sheet_name='Credits',startcol=10,startrow=0,index=False,header=True,engine='xlsxwriter')
 writer.sheets['Credits'].set_column('B:B', None, numberformat)
 writer.sheets['Credits'].set_column('O:O', None, numberformat)
-writer.sheets['Credits'].autofilter('B1:R1')
+writer.sheets['Credits'].autofilter('B1:R1000')
 
 
 writer.save()
