@@ -29,6 +29,7 @@ def getpendingcheckno(row):
 df['Reference'] = df.apply(getpendingcheckno, axis = 1)
 
 #drop unneccessary columns
+
 df = df.drop(columns = ['Record Type','Account Number', 'Account Name','Code'],axis = 1)
 df.rename(columns={'Credit Amount':'Credit','Debit Amount':'Debit'},inplace = True)
 
