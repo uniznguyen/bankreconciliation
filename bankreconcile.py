@@ -6,13 +6,14 @@ import os
 import sys
 
 
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 BankStatementPath = os.path.join(BASE_DIR,'BankStatement.xlsx')
 OutputExcelPath = os.path.join(BASE_DIR,'Reconciliation.xlsx')
 
 #DateFrom and DateTo paramters for the query 
-DateFrom = "{d'2021-01-01'}"
-DateTo = "{d'2022-05-31'}"
+DateFrom = "{d'2021-12-01'}"
+DateTo = "{d'2022-10-31'}"
 # open Excel file from bank statement, create dataframe from worksheet
 df = pd.read_excel(BankStatementPath, header=0, dtype={'Reference':str})
 df['Debit Amount'] = df['Debit Amount'].replace(np.nan,0)
@@ -71,6 +72,7 @@ Check['Combine']= Check['Debit'].astype(str) + '|' + Check['Reference'].astype(s
 
 # open ODBC connection to Quickbooks and run sp_report to query UnCleared Credit Card Transaction
 cn = pyodbc.connect('DSN=QuickBooks Data;')
+# cn = pyodbc.connect('DSN=Stinger Chemical LLC;')
 
 sql = """sp_report CustomTxnDetail show Date, Account, TxnType , RefNumber, ClearedStatus, Debit, Credit
 parameters DateFrom = """+ DateFrom +""",DateTo = """+ DateTo +""", SummarizeRowsBy = 'TotalOnly', AccountFilterType = 'Bank'
